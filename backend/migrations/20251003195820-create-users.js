@@ -28,10 +28,6 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
-      concludedAt: {
-        type: Sequelize.DATE,
-        allowNull: true,
-      },
     });
   },
 
