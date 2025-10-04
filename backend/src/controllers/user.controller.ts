@@ -73,8 +73,9 @@ export async function login(req: Request, res: Response) {
 
         return res.status(200).json({
             message: 'Acesso garantido',
-            token: token,
-            tokenType: 'Bearer'
+            access_token: token,
+            tokenType: 'Bearer',
+            user: user
         });
 
     } catch (error) {

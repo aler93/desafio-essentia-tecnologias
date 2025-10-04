@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
-import { Todo } from "../models";
+import {Todo, User} from "../models";
+// @ts-ignore
+import jwt from 'jsonwebtoken';
 
 export const getTodos = async (req: Request, res: Response) => {
     let useLimit = 100
@@ -14,7 +16,15 @@ export const getTodos = async (req: Request, res: Response) => {
         const todos = await Todo.findAll({
             order: [["createdAt", "DESC"]],
             limit: useLimit,
-            offset: offset
+            offset: offset,
+            include: [
+                {
+                    model: User,
+                    as: "user",
+                    attributes: ["name", "email"],
+                    required: false,
+                },
+            ],
         });
         res.json(todos);
     } catch (err) {
@@ -25,15 +35,27 @@ export const getTodos = async (req: Request, res: Response) => {
 
 export const createTodo = async (req: Request, res: Response) => {
     try {
+        const JWT_SECRET = process.env.JWT_SECRET;
         const { title, description } = req.body;
 
         if (!title || title.trim() === "") {
             return res.status(422).json({ error: "O campo 'título' é obrigatório" });
         }
+        let userId = null;
+        const authHeader = req.headers.authorization;
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            const token = authHeader.split(' ')[1]; // Pega o token após "Bearer "
 
-        console.info("DEBUG", title, description)
+            try {
+                const decodedToken = jwt.verify(token, JWT_SECRET) as { id: number };
 
-        const todo = await Todo.create({ title, description });
+                userId = decodedToken.id;
+            } catch (jwtError) {
+                return res.status(403).json({ error: "Token inválido ou expirado." });
+            }
+        }
+
+        const todo = await Todo.create({ title, description, userId });
         res.status(201).json(todo);
     } catch (err) {
         console.error(err);

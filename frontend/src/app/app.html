@@ -7,6 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-item nav-link active" href="#">Página inicial</a>
+        <a class="nav-item nav-link active" href="#" data-bs-toggle="modal" data-bs-target="#modal-login">Login</a>
       </div>
     </div>
   </nav>
@@ -25,6 +26,12 @@
           <span class="input-group-text">Descrição:</span>
           <textarea type="text" class="form-control" [(ngModel)]="formCreate.description"></textarea>
         </div>
+        @if(userAuth) {
+          <div class="input-group mt-2">
+            <span class="input-group-text">Autor:</span>
+            <input type="text" class="form-control" [(ngModel)]="user.name" disabled>
+          </div>
+        }
       </div>
       <div class="card-footer">
         <button class="btn btn-success" [class.disabled]="formCreate.title.length <= 0" (click)="create()">
@@ -137,6 +144,7 @@
   </div>
 
   <app-modal-form-update [formData]="formUpdate" (appGet)="get()"></app-modal-form-update>
+  <app-modal-login (appCheckAuth)="checkAccess()"></app-modal-login>
   @if(loading) {
     <app-loader></app-loader>
   }

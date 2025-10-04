@@ -4,9 +4,11 @@ import {
     Optional,
     Sequelize
 } from "sequelize";
+import {User} from "./user.model";
 
 interface TodoAttributes {
     id: number;
+    userId: number;
     title: string;
     description?: string | null;
     createdAt?: Date;
@@ -17,7 +19,7 @@ interface TodoAttributes {
 
 type TodoCreationAttributes = Optional<
     TodoAttributes,
-    "id" | "createdAt" | "updatedAt" | "deletedAt" | "concludedAt"
+    "id" | "createdAt" | "updatedAt" | "deletedAt" | "concludedAt" | "userId"
 >;
 
 export class Todo
@@ -25,6 +27,7 @@ export class Todo
     implements TodoAttributes
 {
     public id!: number;
+    public userId!: number;
     public title!: string;
     public description?: string | null;
     public createdAt?: Date;
@@ -40,6 +43,10 @@ export function initTodoModel(sequelize: Sequelize): typeof Todo {
                 type: DataTypes.INTEGER,
                 autoIncrement: true,
                 primaryKey: true,
+            },
+            userId: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
             },
             title: {
                 type: DataTypes.STRING(150),
@@ -76,4 +83,11 @@ export function initTodoModel(sequelize: Sequelize): typeof Todo {
     );
 
     return Todo;
+}
+
+export function associateTodoModel() {
+    Todo.belongsTo(User, {
+        foreignKey: "userId",
+        as: "user",
+    });
 }

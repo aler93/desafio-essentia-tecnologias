@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
-import { initTodoModel, Todo } from "./todo.model";
+import { initTodoModel, Todo, associateTodoModel } from "./todo.model";
 import { initUserModel, User } from "./user.model";
 
 dotenv.config();
@@ -23,5 +23,7 @@ sequelize.authenticate()
 
 initTodoModel(sequelize);
 initUserModel(sequelize);
+
+associateTodoModel();
 
 export { sequelize, Todo, User };

@@ -4,6 +4,7 @@ import axios from 'axios'
 import {FormsModule} from '@angular/forms';
 import Swal from "sweetalert2"
 import {ModalFormUpdate} from './modal-form-update/modal-form-update';
+import {ModalLogin} from './modal-login/modal-login';
 import {Loader} from './loader/loader';
 
 axios.defaults.baseURL = "http://localhost:5000/api";
@@ -13,7 +14,7 @@ export default axios
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FormsModule, ModalFormUpdate, Loader],
+  imports: [RouterOutlet, FormsModule, ModalFormUpdate, ModalLogin, Loader],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -33,6 +34,9 @@ export class App {
       createdAtFormat: "",
       concludedAt: null,
       concludedAtFormat: "",
+      user: {
+        name: ""
+      }
     }
   ];
   protected formCreate = {
@@ -44,6 +48,12 @@ export class App {
     title: "",
     description: "",
   };
+  protected user = {
+    id: 0,
+    name: "",
+    email: "",
+  };
+  protected userAuth = false;
   protected limit: Number = 50;
   protected page: Number = 1;
   protected loading: Boolean = true;
@@ -64,6 +74,8 @@ export class App {
     if( formCreate ) {
       this.formCreate = JSON.parse(formCreate);
     }
+
+    this.checkAccess()
   }
   setupUpdate(todo: any) {
     this.formUpdate.id = todo.id;
@@ -76,13 +88,17 @@ export class App {
       this.items = response.data;
       this.items.map((row) => {
         row.userName = "Não identificado";
+        if( row.user ) {
+          row.userName = row.user.name
+        }
+
         row.descriptionShort = row.description;
         row.createdAtFormat = new Date(row.createdAt).toLocaleString();
         if( row.concludedAt ) {
           row.concludedAtFormat = new Date(row.concludedAt).toLocaleString();
         }
 
-        if(row.description.length > this.descriptionLimit) {
+        if(row.description && row.description.length > this.descriptionLimit) {
           row.descriptionShort = row.description.substring(0, this.descriptionLimit) + "...";
         }
       })
@@ -120,8 +136,13 @@ export class App {
       return;
     }
 
-    axios.post("/to-do", this.formCreate).then((response) => {
-      console.log(response.data);
+    const headers: Record<string, string> = {};
+    const accessToken = sessionStorage.getItem("access_token");
+    if (accessToken) {
+      headers["Authorization"] = `Bearer ${accessToken}`;
+    }
+
+    axios.post("/to-do", this.formCreate, {headers}).then((response) => {
       this.get();
       //this.items.push(response.data)
       localStorage.removeItem("techx_form_newtodo")
@@ -144,5 +165,12 @@ export class App {
   }
   persistForm() {
     localStorage.setItem("techx_form_newtodo", JSON.stringify(this.formCreate))
+  }
+  checkAccess() {
+    const user = sessionStorage.getItem("user")
+    if( user ) {
+      this.user = JSON.parse(user)
+      this.userAuth = true
+    }
   }
 }

@@ -1,0 +1,59 @@
+<div class="modal fade" id="modal-login" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Acessar</h1>
+        <button type="button" id="btn-close-modal-login" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      @if(viewCreate){
+        <div class="modal-body">
+          <div class="input-group mb-2">
+            <span class="input-group-text">Nome:</span>
+            <input type="text" class="form-control" [(ngModel)]="formCreate.name">
+          </div>
+          <div class="input-group mb-2">
+            <span class="input-group-text">E-mail:</span>
+            <input type="text" class="form-control" [(ngModel)]="formCreate.email">
+          </div>
+          <div class="input-group">
+            <span class="input-group-text">Senha:</span>
+            <input type="text" class="form-control" [(ngModel)]="formCreate.password">
+          </div>
+        </div>
+      } @else {
+        <div class="modal-body">
+          <div class="input-group mb-2">
+            <span class="input-group-text">E-mail:</span>
+            <input type="text" class="form-control" [(ngModel)]="formLogin.email">
+          </div>
+          <div class="input-group">
+            <span class="input-group-text">Senha:</span>
+            <input type="password" class="form-control" [(ngModel)]="formLogin.password">
+          </div>
+        </div>
+      }
+
+      <div class="modal-footer">
+        @if(viewCreate){
+          <button type="button" class="btn btn-primary mx-2" (click)="toggleView()">
+            Voltar para login
+          </button>
+        } @else {
+          <button type="button" class="btn btn-primary mx-2" (click)="toggleView()">
+            Criar conta
+          </button>
+        }
+        @if(viewCreate){
+          <button type="button" class="btn btn-success" (click)="createUser()">
+            Cadastrar usuário
+          </button>
+        } @else {
+          <button type="button" class="btn btn-success" (click)="login()">
+            Acessar
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
