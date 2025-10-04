@@ -1,0 +1,22 @@
+services:
+  essentia-db:
+    image: mysql:lts
+    container_name: essentia-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_HOST: "%"
+    ports:
+      - "3308:3306"
+    volumes:
+      - essentia-db:/var/lib/mysql
+    networks:
+      - essentia-network
+
+networks:
+  essentia-network:
+    driver: bridge
+
+volumes:
+  essentia-db:
+    driver: local

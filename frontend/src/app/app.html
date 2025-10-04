@@ -1,0 +1,81 @@
+<main>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">{{ title }}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link active" href="#">Página inicial</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-lg mt-3">
+    <div class="card border border-primary shadow">
+      <div class="card-header bg-primary text-white">
+        <strong>Adicionar item</strong>
+      </div>
+      <div class="card-body">
+        <div class="input-group mb-2">
+          <span class="input-group-text">Título:</span>
+          <input type="text" class="form-control" [(ngModel)]="formCreate.title" max="150">
+        </div>
+        <div class="input-group">
+          <span class="input-group-text">Descrição:</span>
+          <textarea type="text" class="form-control" [(ngModel)]="formCreate.description"></textarea>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-success" [class.disabled]="formCreate.title.length <= 0" (click)="create()">
+          Cadastrar
+        </button>
+      </div>
+    </div>
+    <table class="table mt-3 shadow">
+      <thead>
+      <tr class="table-secondary">
+        <th>Item</th>
+        <th>Cadastrado por</th>
+        <th>Descrição</th>
+        <th class="text-center">Concluído</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (row of items; track row.id) {
+          <tr class="align-middle" [class.table-success]="row.concludedAt">
+            <td>{{ row.title }}</td>
+            <td>{{ row.userName }}</td>
+            <td>{{ row.descriptionShort }}</td>
+            <td class="text-center">
+              @if(row.concludedAt) {
+                Sim
+              }
+              @else {
+                Não
+              }
+            </td>
+            <td class="text-end">
+              <button class="btn btn-success mx-2" (click)="toggleConclude(row.id)">
+                <i class="bi bi-check-circle-fill"></i>
+              </button>
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-update-item" (click)="setupUpdate(row)">
+                <i class="bi bi-pencil-fill"></i>
+              </button>
+            </td>
+          </tr>
+        }
+        @empty {
+          <tr>
+            <td colspan="99">Nenhum tarefa registrada</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <app-modal-form-update [formData]="formUpdate" (appGet)="get()"></app-modal-form-update>
+</main>
+
+<router-outlet />

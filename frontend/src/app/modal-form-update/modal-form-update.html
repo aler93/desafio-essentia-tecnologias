@@ -1,0 +1,28 @@
+<div class="modal fade" id="modal-update-item" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Atualizar tarefa #{{formData().id}}</h1>
+        <button type="button" id="btn-close-modal-update-item" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-2">
+          <span class="input-group-text">Título:</span>
+          <input type="text" class="form-control" [(ngModel)]="formData().title">
+        </div>
+        <div class="input-group">
+          <span class="input-group-text">Descrição:</span>
+          <textarea type="text" class="form-control" [(ngModel)]="formData().description"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger mx-2" (click)="delete(formData().id)">
+          Excluir
+        </button>
+        <button type="button" class="btn btn-success" (click)="update(formData().id)">
+          Atualizar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
