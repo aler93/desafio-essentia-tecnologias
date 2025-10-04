@@ -61,6 +61,10 @@ export class ModalFormUpdate {
       if( r.isConfirmed ) {
         axios.delete("/to-do/" + id).then((response) => {
           this.appGet.emit();
+          const btnClose = document.getElementById("btn-close-modal-update-item")
+          if(btnClose) {
+            btnClose.click()
+          }
         }).catch((err)=> {
           console.error(err);
         })

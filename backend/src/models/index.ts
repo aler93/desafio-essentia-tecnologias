@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 import { initTodoModel, Todo } from "./todo.model";
+import { initUserModel, User } from "./user.model";
 
 dotenv.config();
 
@@ -21,5 +22,6 @@ sequelize.authenticate()
     .catch(err => console.error("Erro ao conectar no banco:", err));
 
 initTodoModel(sequelize);
+initUserModel(sequelize);
 
-export { sequelize, Todo };
+export { sequelize, Todo, User };
