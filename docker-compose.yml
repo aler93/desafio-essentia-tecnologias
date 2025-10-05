@@ -2,6 +2,7 @@ services:
   essentia-db:
     image: mysql:lts
     container_name: essentia-db
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
@@ -12,6 +13,21 @@ services:
       - essentia-db:/var/lib/mysql
     networks:
       - essentia-network
+
+  essentia-app:
+    image: node:bookworm
+    container_name: essentia-app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    working_dir: /app
+    entrypoint: ["node", "/app/backend/dist/index.js"]
+    networks:
+      - essentia-network
+    depends_on:
+      - essentia-db
 
 networks:
   essentia-network:

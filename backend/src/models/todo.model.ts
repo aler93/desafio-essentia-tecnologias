@@ -8,7 +8,7 @@ import {User} from "./user.model";
 
 interface TodoAttributes {
     id: number;
-    userId: number;
+    userId: number | null;
     title: string;
     description?: string | null;
     createdAt?: Date;
@@ -27,7 +27,7 @@ export class Todo
     implements TodoAttributes
 {
     public id!: number;
-    public userId!: number;
+    public userId!: number | null;
     public title!: string;
     public description?: string | null;
     public createdAt?: Date;
